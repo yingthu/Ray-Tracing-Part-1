@@ -66,8 +66,36 @@ public class Scene {
 		//			Hint: modifying the end field of your local copy of ray might be useful here.
 		//		 4) Set outRecord to the IntersectionRecord of the first object hit.
 		//		 5) If there was an intersection, return true; otherwise return false.
+		// Variable to save intersection record
+		IntersectionRecord tmp = new IntersectionRecord();
+		// Copy of the given ray
+		Ray ray = new Ray(rayIn.origin, rayIn.direction);
+		ray.start = rayIn.start;
+		ray.end = rayIn.end;
 		
-		return false;
+		// Initialize min_t
+		double min_t = Double.MAX_VALUE;
+		
+		// Flag whether exist an intersection
+		boolean flag = false;
+		
+		// Loop through all surfaces
+		for (Surface s : surfaces)
+		{
+			// If there is an intersection
+			if (s.intersect(tmp, ray))
+			{
+				flag = true;
+				// Update first intersection
+				if (tmp.t < min_t)
+				{
+					min_t = tmp.t;
+					outRecord.set(tmp);
+				}
+				
+			}
+		}
+		return flag;
 	}
 	
 	/**
@@ -79,7 +107,14 @@ public class Scene {
 	 */
 	public boolean getAnyIntersection(Ray ray) {
 		// TODO: Fill in this function. It should be much simpler than getFirstIntersection().
-
+		// Variable to save intersection record
+		IntersectionRecord tmp = new IntersectionRecord();
+		for (Surface s : surfaces)
+		{
+			// If there is an intersection
+			if (s.intersect(tmp, ray))
+				return true;
+		}
 		return false;
 	}
 }

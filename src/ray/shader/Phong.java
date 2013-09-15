@@ -55,7 +55,37 @@ public class Phong extends Shader {
 		//    the intersection point from the light's position.
 		// 4) Compute the color of the point using the Phong shading model. Add this value
 		//    to the output.
+		// Reset
+		outIntensity.set(0, 0, 0);
 		
+		// Save unit vector in half vector direction
+		Vector3 h = new Vector3();
+		
+		// Loop through lights
+		for (Light light : scene.getLights())
+		{
+			// If intersection point not shadowed
+			if (!isShadowed(scene, light, record, shadowRay))
+			{
+				incoming.sub(light.position, record.location);
+				incoming.normalize();
+				outgoing.normalize();
+				h.add(incoming, outgoing);
+				h.normalize();
+				
+				// Compute values for diffuse part and specular part
+				double valD = Math.max(record.normal.dot(incoming), 0);
+				double valS = Math.pow(Math.max(record.normal.dot(h), 0), exponent);
+				
+				// Compute using Phong model and add contribution
+				color.r += (diffuseColor.r * valD + specularColor.r * valS) * light.intensity.r;
+				color.g += (diffuseColor.g * valD + specularColor.g * valS) * light.intensity.g;
+				color.b += (diffuseColor.b * valD + specularColor.b * valS) * light.intensity.b;
+			}
+		}
+		outIntensity.set(color);
+		// Keep in range
+		outIntensity.clamp(0, 1);
 	}
 
 }

@@ -46,7 +46,28 @@ public class Lambertian extends Shader {
 		//    the intersection point from the light's position.
 		// 4) Compute the color of the point using the Lambert shading model. Add this value
 		//    to the output.
+		// Reset
+		outIntensity.set(0, 0, 0);
 		
+		// Loop through lights
+		for (Light light : scene.getLights())
+		{
+			// If not shadowed
+			if (!isShadowed(scene, light, record, shadowRay))
+			{
+				incoming.sub(light.position, record.location);
+				incoming.normalize();
+				
+				// Compute color using Lambert shading model
+				double val = Math.max(record.normal.dot(incoming), 0);
+				color.r += diffuseColor.r * light.intensity.r * val;
+				color.g += diffuseColor.g * light.intensity.g * val;
+				color.b += diffuseColor.b * light.intensity.b * val;
+			}
+		}
+		outIntensity.set(color);
+		// Keep in range
+		outIntensity.clamp(0, 1);
 	}
 
 }
