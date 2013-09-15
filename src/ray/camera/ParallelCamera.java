@@ -38,7 +38,14 @@ public class ParallelCamera extends Camera {
 	    //   2. set basisW to be parallel to projection normal but pointing to the opposite direction.
 	    //   3. set basisU to be parallel to the image's U (horizontal) axis.
 	    //   4. set basisV to be parallel to the image's V (vertical) axis.
-    	
+    	if (projNormal.length() == 0)
+    		projNormal.set(viewDir);
+    	basisW.set(-projNormal.x, -projNormal.y, -projNormal.z);
+    	basisW.normalize();
+    	basisU.cross(viewUp, basisW);
+    	basisU.normalize();
+    	basisV.cross(basisW, basisU);
+        basisV.normalize();
 	    
 	    initialized = true;
     }
@@ -56,6 +63,17 @@ public class ParallelCamera extends Camera {
 		if (!initialized) initView();
 	    
 	    // TODO: fill in this function.
-
+		double u = -viewWidth / 2.0 + viewWidth * inU;
+	    double v = -viewHeight / 2.0 + viewHeight * inV;
+	    // ray.origin = e_ + uu_ + vv_ 
+	    Vector3 oriTmp = new Vector3();
+	    oriTmp.scaleAdd(u, basisU);
+	    oriTmp.scaleAdd(v, basisV);
+	    oriTmp.scaleAdd(1.0, viewPoint);
+	    outRay.origin.set(oriTmp);
+	    // ray.direction = -w_
+	    outRay.direction.set(projNormal);
+	    outRay.start = 0;
+	    outRay.end = Double.POSITIVE_INFINITY;
 	}
 }
