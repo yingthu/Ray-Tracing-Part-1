@@ -53,21 +53,24 @@ public class Lambertian extends Shader {
 		for (Light light : scene.getLights())
 		{
 			// If not shadowed
-			if (!isShadowed(scene, light, record, shadowRay))
-			{
+			//if (!isShadowed(scene, light, record, shadowRay))
+			//{
 				incoming.sub(light.position, record.location);
 				incoming.normalize();
 				
 				// Compute color using Lambert shading model
 				double val = Math.max(record.normal.dot(incoming), 0);
-				color.r += diffuseColor.r * light.intensity.r * val;
-				color.g += diffuseColor.g * light.intensity.g * val;
-				color.b += diffuseColor.b * light.intensity.b * val;
-			}
+				//if (val != 0) System.out.println("val:" + val);
+				outIntensity.r += diffuseColor.r * light.intensity.r * val;
+				//if (color.r != 0) System.out.println("red:" + color.r + " light_intensity:" + light.intensity);
+				outIntensity.g += diffuseColor.g * light.intensity.g * val;
+				outIntensity.b += diffuseColor.b * light.intensity.b * val;
+			//}
 		}
-		outIntensity.set(color);
+		//outIntensity.set(color);
 		// Keep in range
 		outIntensity.clamp(0, 1);
+		System.out.println("Clamped_Red:" + outIntensity.r);
 	}
 
 }

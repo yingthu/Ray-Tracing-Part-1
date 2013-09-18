@@ -75,7 +75,7 @@ public class PerspectiveCamera extends Camera {
     dirTmp.scaleAdd(v, basisV);
     dirTmp.scaleAdd(-projDistance, basisW);
     outRay.direction.set(dirTmp);
-    outRay.start = 0;
+    outRay.start = Ray.EPSILON;
     outRay.end = Double.POSITIVE_INFINITY;
   }
 }

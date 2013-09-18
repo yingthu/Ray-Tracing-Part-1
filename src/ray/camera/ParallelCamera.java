@@ -73,7 +73,7 @@ public class ParallelCamera extends Camera {
 	    outRay.origin.set(oriTmp);
 	    // ray.direction = -w_
 	    outRay.direction.set(projNormal);
-	    outRay.start = 0;
+	    outRay.start = Ray.EPSILON;
 	    outRay.end = Double.POSITIVE_INFINITY;
 	}
 }

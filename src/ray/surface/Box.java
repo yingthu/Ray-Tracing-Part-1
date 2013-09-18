@@ -48,7 +48,7 @@ public class Box extends Surface {
     double tEnter = Math.max(Math.max(tXenter, tYenter), tZenter);
     double tExit = Math.min(Math.min(tXexit, tYexit), tZexit);
     
-    if (tEnter > rayIn.end || tExit < rayIn.start || tEnter > tExit)
+    if (tEnter > rayIn.end || tExit < rayIn.start || tEnter > tExit || tEnter == 0 || tExit == 0)
     	return false;
     
     rayIn.end = tEnter;

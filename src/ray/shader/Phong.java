@@ -65,11 +65,13 @@ public class Phong extends Shader {
 		for (Light light : scene.getLights())
 		{
 			// If intersection point not shadowed
-			if (!isShadowed(scene, light, record, shadowRay))
-			{
+			//if (!isShadowed(scene, light, record, shadowRay))
+			//{
+			//	System.out.println("Got inside!");
 				incoming.sub(light.position, record.location);
 				incoming.normalize();
-				outgoing.normalize();
+				//outgoing.normalize();
+				
 				h.add(incoming, outgoing);
 				h.normalize();
 				
@@ -78,12 +80,12 @@ public class Phong extends Shader {
 				double valS = Math.pow(Math.max(record.normal.dot(h), 0), exponent);
 				
 				// Compute using Phong model and add contribution
-				color.r += (diffuseColor.r * valD + specularColor.r * valS) * light.intensity.r;
-				color.g += (diffuseColor.g * valD + specularColor.g * valS) * light.intensity.g;
-				color.b += (diffuseColor.b * valD + specularColor.b * valS) * light.intensity.b;
-			}
+				outIntensity.r += (diffuseColor.r * valD + specularColor.r * valS) * light.intensity.r;
+				outIntensity.g += (diffuseColor.g * valD + specularColor.g * valS) * light.intensity.g;
+				outIntensity.b += (diffuseColor.b * valD + specularColor.b * valS) * light.intensity.b;
+			//}
 		}
-		outIntensity.set(color);
+		//outIntensity.set(color);
 		// Keep in range
 		outIntensity.clamp(0, 1);
 	}
