@@ -36,32 +36,34 @@ public class Sphere extends Surface {
    */
   public boolean intersect(IntersectionRecord outRecord, Ray rayIn) {
     // TODO: fill in this function.
-	Vector3 eminusc = new Vector3();
-	eminusc.sub(rayIn.origin, center);
-
-	double a = rayIn.direction.dot(rayIn.direction);
-	double b = 2 * rayIn.direction.dot(eminusc);
-	double c = eminusc.dot(eminusc) - radius * radius;
+	Vector3 op = new Vector3();
+	op.sub(rayIn.origin, center);
+	Vector3 d = rayIn.direction;
+	
+	double a = d.dot(d);
+	double b = 2 * d.dot(op);
+	double c = op.dot(op) - radius * radius;
 	double discriminant = b * b - 4 * a * c;
+	// No intersection
 	if (discriminant < 0) {
 		return false;
 	}
-
-	eminusc = null;
-
+	// Value t for intersection point
 	double t = (discriminant == 0 ? -b : -b - Math.sqrt(discriminant)) / (2 * a);
-	if (t > rayIn.end || t < rayIn.start) {
+	if (t > rayIn.end || t < rayIn.start) 
+	{
 	  return false;
 	}
-
-	outRecord.t = rayIn.end = t;
+	// Update outRecord and rayIn.end
+	outRecord.t = t;
 	outRecord.surface = this;
 	Vector3 tmp = new Vector3();
 	tmp.scaleAdd(outRecord.t, rayIn.direction);
 	outRecord.location.add(rayIn.origin, tmp);
 	outRecord.normal.sub(outRecord.location, center);
 	outRecord.normal.normalize();
-
+	rayIn.end = t;
+	
 	return true;
 
   }

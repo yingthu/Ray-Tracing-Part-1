@@ -62,6 +62,7 @@ public class Box extends Surface {
     
     // Set normal for outRecord
     Point3 tmpPt = outRecord.location;
+    // Consider float point rounding errors
     if (Math.abs(tmpPt.x - minPt.x) <= Ray.EPSILON)
     	outRecord.normal.set(-1, 0, 0);
     else if (Math.abs(tmpPt.x - maxPt.x) <= Ray.EPSILON)

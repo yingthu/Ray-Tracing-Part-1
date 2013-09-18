@@ -75,8 +75,7 @@ public class BasicRayTracer extends RayTracer {
 				
 				pixelColor.set(rayColor);
 				
-				// Gamma correction and clamp pixel values
-				//pixelColor.gammaCorrect(2.2);
+				// Clamp pixel values
 				pixelColor.clamp(0, 1);
 				
 				image.setPixelColor(pixelColor, x, y);

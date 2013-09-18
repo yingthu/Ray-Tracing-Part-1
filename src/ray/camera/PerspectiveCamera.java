@@ -44,7 +44,7 @@ public class PerspectiveCamera extends Camera {
 	//   4. set basisV to be parallel to the image's V (vertical) axis.
 	if (projNormal.length() == 0)
 		projNormal.set(viewDir);
-	if (projNormal == viewDir)
+	if (projNormal.dot(viewDir) > 0)
 		basisW.set(-projNormal.x, -projNormal.y, -projNormal.z);
 	else
 		basisW.set(projNormal);
