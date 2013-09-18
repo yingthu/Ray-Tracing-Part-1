@@ -65,8 +65,20 @@ public class BasicRayTracer extends RayTracer {
 
 				// TODO: Compute the viewing ray,
 				//       and call shadeRay on it to get the ray's color.
-
-
+				// Compute pixel values
+				double u = (x + .5) / width;
+				double v = (y + .5) / height;
+				// Get ray from camera
+				cam.getRay(ray, u, v);
+				
+				shadeRay(rayColor, scene, ray, work);
+				
+				pixelColor.set(rayColor);
+				
+				// Gamma correction and clamp pixel values
+				//pixelColor.gammaCorrect(2.2);
+				pixelColor.clamp(0, 1);
+				
 				image.setPixelColor(pixelColor, x, y);
 
 				counter ++;
@@ -76,7 +88,7 @@ public class BasicRayTracer extends RayTracer {
 				}
 			}
 		}
-
+		
 		// Output time
 		long totalTime = (System.currentTimeMillis() - startTime);
 		System.out.println("Done.  Total rendering time: "

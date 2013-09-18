@@ -28,6 +28,52 @@ public class Box extends Surface {
    */
   public boolean intersect(IntersectionRecord outRecord, Ray rayIn) {
     // TODO: fill in this function.
+    double tXenter, tXexit, tYenter, tYexit, tZenter, tZexit;
+    
+    double tXmin = (minPt.x - rayIn.origin.x) / rayIn.direction.x;
+    double tXmax = (maxPt.x - rayIn.origin.x) / rayIn.direction.x;
+    tXenter = Math.min(tXmin, tXmax);
+    tXexit = Math.max(tXmin, tXmax);
+    
+    double tYmin = (minPt.y - rayIn.origin.y) / rayIn.direction.y;
+    double tYmax = (maxPt.y - rayIn.origin.y) / rayIn.direction.y;
+    tYenter = Math.min(tYmin, tYmax);
+    tYexit = Math.max(tYmin, tYmax);
+    
+    double tZmin = (minPt.z - rayIn.origin.z) / rayIn.direction.z;
+    double tZmax = (maxPt.z - rayIn.origin.z) / rayIn.direction.z;
+    tZenter = Math.min(tZmin, tZmax);
+    tZexit = Math.max(tZmin, tZmax);
+    
+    double tEnter = Math.max(Math.max(tXenter, tYenter), tZenter);
+    double tExit = Math.min(Math.min(tXexit, tYexit), tZexit);
+    
+    if (tEnter > rayIn.end || tExit < rayIn.start || tEnter > tExit)
+    	return false;
+    
+    rayIn.end = tEnter;
+    outRecord.t = tEnter;
+    outRecord.surface = this;
+    
+    // r(t) = p + td
+    Vector3 tmpVec = new Vector3();
+    tmpVec.scaleAdd(tEnter, rayIn.direction);
+    outRecord.location.add(rayIn.origin, tmpVec);
+    
+    // Set normal for outRecord
+    Point3 tmpPt = outRecord.location;
+    if (tmpPt.x == minPt.x)
+    	outRecord.normal.set(-1, 0, 0);
+    else if (tmpPt.x == maxPt.x)
+    	outRecord.normal.set(1, 0, 0);
+    else if (tmpPt.y == minPt.y)
+    	outRecord.normal.set(0, -1, 0);
+    else if (tmpPt.y == maxPt.y)
+    	outRecord.normal.set(0, 1, 0);
+    else if (tmpPt.z == minPt.x)
+    	outRecord.normal.set(0, 0, -1);
+    else if (tmpPt.z == maxPt.z)
+    	outRecord.normal.set(0, 0, 1);
     
     return true;
 
