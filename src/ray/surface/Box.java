@@ -62,17 +62,17 @@ public class Box extends Surface {
     
     // Set normal for outRecord
     Point3 tmpPt = outRecord.location;
-    if (tmpPt.x == minPt.x)
+    if (Math.abs(tmpPt.x - minPt.x) <= Ray.EPSILON)
     	outRecord.normal.set(-1, 0, 0);
-    else if (tmpPt.x == maxPt.x)
+    else if (Math.abs(tmpPt.x - maxPt.x) <= Ray.EPSILON)
     	outRecord.normal.set(1, 0, 0);
-    else if (tmpPt.y == minPt.y)
+    else if (Math.abs(tmpPt.y - minPt.y) <= Ray.EPSILON)
     	outRecord.normal.set(0, -1, 0);
-    else if (tmpPt.y == maxPt.y)
+    else if (Math.abs(tmpPt.y - maxPt.y) <= Ray.EPSILON)
     	outRecord.normal.set(0, 1, 0);
-    else if (tmpPt.z == minPt.x)
+    else if (Math.abs(tmpPt.z - minPt.z) <= Ray.EPSILON)
     	outRecord.normal.set(0, 0, -1);
-    else if (tmpPt.z == maxPt.z)
+    else if (Math.abs(tmpPt.z - maxPt.z) <= Ray.EPSILON)
     	outRecord.normal.set(0, 0, 1);
     
     return true;

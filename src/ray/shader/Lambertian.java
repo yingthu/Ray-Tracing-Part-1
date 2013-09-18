@@ -53,8 +53,8 @@ public class Lambertian extends Shader {
 		for (Light light : scene.getLights())
 		{
 			// If not shadowed
-			//if (!isShadowed(scene, light, record, shadowRay))
-			//{
+			if (!isShadowed(scene, light, record, shadowRay))
+			{
 				incoming.sub(light.position, record.location);
 				incoming.normalize();
 				
@@ -65,12 +65,12 @@ public class Lambertian extends Shader {
 				//if (color.r != 0) System.out.println("red:" + color.r + " light_intensity:" + light.intensity);
 				outIntensity.g += diffuseColor.g * light.intensity.g * val;
 				outIntensity.b += diffuseColor.b * light.intensity.b * val;
-			//}
+			}
 		}
 		//outIntensity.set(color);
 		// Keep in range
 		outIntensity.clamp(0, 1);
-		System.out.println("Clamped_Red:" + outIntensity.r);
+		//System.out.println("Clamped_Red:" + outIntensity.r);
 	}
 
 }
