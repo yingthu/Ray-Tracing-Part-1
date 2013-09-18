@@ -72,7 +72,13 @@ public class ParallelCamera extends Camera {
 	    oriTmp.scaleAdd(1.0, viewPoint);
 	    outRay.origin.set(oriTmp);
 	    // ray.direction = -w_
-	    outRay.direction.set(projNormal);
+	    //if (projNormal == viewDir)
+	    //	outRay.direction.set(projNormal);
+	    //else // Oblique
+	    Vector3 tmpD = new Vector3();
+	    tmpD.set(viewDir);
+	    tmpD.normalize();
+	    outRay.direction.set(tmpD);
 	    outRay.start = Ray.EPSILON;
 	    outRay.end = Double.POSITIVE_INFINITY;
 	}

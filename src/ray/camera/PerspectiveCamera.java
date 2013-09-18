@@ -44,7 +44,11 @@ public class PerspectiveCamera extends Camera {
 	//   4. set basisV to be parallel to the image's V (vertical) axis.
 	if (projNormal.length() == 0)
 		projNormal.set(viewDir);
-	basisW.set(-projNormal.x, -projNormal.y, -projNormal.z);
+	if (projNormal == viewDir)
+		basisW.set(-projNormal.x, -projNormal.y, -projNormal.z);
+	else
+		basisW.set(projNormal);
+	//basisW.scaleAdd(-1.0, projNormal);
 	basisW.normalize();
 	basisU.cross(viewUp, basisW);
 	basisU.normalize();
@@ -70,10 +74,18 @@ public class PerspectiveCamera extends Camera {
     // ray.origin = e_
     outRay.origin.set(viewPoint);
     // ray.direction = dd_ + uu_ + vv_
+    Vector3 dTmp = new Vector3();
+    dTmp.set(viewDir);
     Vector3 dirTmp = new Vector3();
     dirTmp.scaleAdd(u, basisU);
     dirTmp.scaleAdd(v, basisV);
-    dirTmp.scaleAdd(-projDistance, basisW);
+    //if (projNormal == viewDir)
+    //	dirTmp.scaleAdd(-projDistance, basisW);
+    //else // Oblique
+    //{
+    dTmp.normalize();
+    dirTmp.scaleAdd(projDistance, dTmp);
+    //}
     outRay.direction.set(dirTmp);
     outRay.start = Ray.EPSILON;
     outRay.end = Double.POSITIVE_INFINITY;
