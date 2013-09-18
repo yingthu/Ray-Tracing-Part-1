@@ -5,6 +5,7 @@ import ray.IntersectionRecord;
 import ray.Ray;
 import ray.math.Point3;
 import ray.math.Vector3;
+import sun.net.www.content.text.plain;
 
 /**
  * Represents a sphere as a center and a radius.
@@ -35,45 +36,34 @@ public class Sphere extends Surface {
    */
   public boolean intersect(IntersectionRecord outRecord, Ray rayIn) {
     // TODO: fill in this function.
-	Point3 o = new Point3(rayIn.origin);
-	Vector3 d = new Vector3(rayIn.direction);
 
-	Point3 c = center;
-	Vector3 oc = new Vector3();
-	oc.sub(o,c);	
-	double A = d.dot(d);
-	double C = oc.dot(oc) - Math.pow(radius, 2);
-	d.scale(2);
-	double B = d.dot(oc);
-	double discriminant = (Math.pow(B, 2)-(4*A*C));
-	if(discriminant<0.0)
-	{
-		return false;
-	} 
-	else 
-	{
-		d = new Vector3(rayIn.direction);
-		double t0 = ((-B) + Math.sqrt(discriminant))/(2*A);
-		double t1 = ((-B) - Math.sqrt(discriminant))/(2*A);
-		double t;
-		if(t0<0) t=t1;
-		else if(t1<0) t=t0;	
-		else if(t1>=t0) t=t0;
-		else if(t1<t0) t=t1;
-		else return false;
-		d.scale(t);
+	  Vector3 eminusc = new Vector3();
+	  eminusc.sub(rayIn.origin, center);
 
-		// Calculate the outRecord
-		rayIn.evaluate(outRecord.location, t);
+		double a = rayIn.direction.dot(rayIn.direction);
+		double b = 2 * rayIn.direction.dot(eminusc);
+		double c = eminusc.dot(eminusc) - radius * radius;
+		double discriminant = b * b - 4 * a * c;
+		if (discriminant < 0) {
+			return false;
+		}
+
+		eminusc = null;
+
+		double t = (discriminant == 0 ? -b : -b - Math.sqrt(discriminant)) / (2 * a);
+		if (t > rayIn.end || t < rayIn.start) {
+		  return false;
+		}
+
+		outRecord.t = rayIn.end = t;
 		outRecord.surface = this;
-		outRecord.normal.set(new Vector3());
-		outRecord.normal.sub(center,outRecord.location);
+		Vector3 tmp = new Vector3();
+		tmp.scaleAdd(outRecord.t, rayIn.direction);
+		outRecord.location.add(rayIn.origin, tmp);
+		outRecord.normal.sub(outRecord.location, center);
 		outRecord.normal.normalize();
-		outRecord.t=t;
 
-		rayIn.start=0;
-		rayIn.end=t;
-	}
+	
 	return true;
 
   }
